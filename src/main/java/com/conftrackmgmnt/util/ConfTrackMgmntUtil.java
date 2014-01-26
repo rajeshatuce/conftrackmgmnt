@@ -3,15 +3,22 @@ package com.conftrackmgmnt.util;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
+
+import com.conftrackmgmnt.core.constant.ConfTrackMgmntConstant;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class ConfTrackMgmntUtil.
  */
 public class ConfTrackMgmntUtil {
+	
+	/** The format. */
+	private static SimpleDateFormat format=new SimpleDateFormat(ConfTrackMgmntConstant.DATE_FORMAT);
 	
 	/**
 	 * Read file.
@@ -50,6 +57,16 @@ public class ConfTrackMgmntUtil {
 			return in.nextInt();
 		}
 		return null;
+	}
+	
+	/**
+	 * Format date time.
+	 *
+	 * @param calendar the calendar
+	 * @return the string
+	 */
+	public static String formatDateTime(Calendar calendar){
+		return format.format(calendar.getTime());
 	}
 
 }

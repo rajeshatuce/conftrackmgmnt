@@ -1,14 +1,14 @@
 package com.conftrackmgmnt.knowledgebase;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
+import com.conftrackmgmnt.core.constant.ConfTrackMgmntConstant;
 import com.conftrackmgmnt.core.model.Confrence;
 import com.conftrackmgmnt.core.model.Tracks;
 import com.conftrackmgmnt.knowledgebase.ConfrenceScheduler.ConfrenceSchedulerType;
+import com.conftrackmgmnt.util.ConfTrackMgmntUtil;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -31,12 +31,6 @@ public class ConfrenceSchedulerCentral {
 	/** The current track. */
 	private Tracks currentTrack;
 	
-	/** The date format. */
-	private String dateFormat="hh:mm a ";
-	
-	/** The format. */
-	private SimpleDateFormat format;
-
 	/**
 	 * Instantiates a new confrence scheduler central.
 	 *
@@ -45,7 +39,6 @@ public class ConfrenceSchedulerCentral {
 	public ConfrenceSchedulerCentral(List<Confrence> initialInput){
 		possibleTracks=new ArrayList<Tracks>();
 		this.currentInput=initialInput;
-		format=new SimpleDateFormat(dateFormat);
 	}
 
 	/**
@@ -53,8 +46,8 @@ public class ConfrenceSchedulerCentral {
 	 */
 	public void startScheduling(){
 		currentTrack=new Tracks();
-		morningSessionScheduler=new ConfrenceScheduler(0,ConfrenceSchedulerType.MORNING_SCHEDULER,this);
-		morningSessionScheduler.scheduleConfrenceWithinTargetDuration(180, currentInput);
+		morningSessionScheduler=new ConfrenceScheduler(ConfTrackMgmntConstant.MORNING_SESSION_TOLERANCE,ConfrenceSchedulerType.MORNING_SCHEDULER,this);
+		morningSessionScheduler.scheduleConfrenceWithinTargetDuration(ConfTrackMgmntConstant.MORNING_SESSION_TARGET_DURATION, currentInput);
 	}
 
 	/**
@@ -66,8 +59,8 @@ public class ConfrenceSchedulerCentral {
 		currentTrack.setMorningSession(morningConfrence);
 		smokeAlreadyScheduledConfrence(morningConfrence);
 		if(!currentInput.isEmpty()){//more to go.lets do it in afternoon session
-			afternoonSessionScheduler=new ConfrenceScheduler(30,ConfrenceSchedulerType.AFTERNOON_SCHEDULER,this);
-			afternoonSessionScheduler.scheduleConfrenceWithinTargetDuration(210, currentInput);
+			afternoonSessionScheduler=new ConfrenceScheduler(ConfTrackMgmntConstant.AFTERNOON_SESSION_TOLERANCE,ConfrenceSchedulerType.AFTERNOON_SCHEDULER,this);
+			afternoonSessionScheduler.scheduleConfrenceWithinTargetDuration(ConfTrackMgmntConstant.AFTERNOON_SESSION_TARGET_DURATION, currentInput);
 		}else{
 			//We are done with scheduling
 			possibleTracks.add(currentTrack);//add current track to possible track list
@@ -88,8 +81,8 @@ public class ConfrenceSchedulerCentral {
 		smokeAlreadyScheduledConfrence(afternoonConfrence);
 		if(!currentInput.isEmpty()){//more to go.lets do it in morning session of new track
 			currentTrack=new Tracks();
-			morningSessionScheduler=new ConfrenceScheduler(0,ConfrenceSchedulerType.MORNING_SCHEDULER,this);
-			morningSessionScheduler.scheduleConfrenceWithinTargetDuration(180, currentInput);
+			morningSessionScheduler=new ConfrenceScheduler(ConfTrackMgmntConstant.MORNING_SESSION_TOLERANCE,ConfrenceSchedulerType.MORNING_SCHEDULER,this);
+			morningSessionScheduler.scheduleConfrenceWithinTargetDuration(ConfTrackMgmntConstant.MORNING_SESSION_TARGET_DURATION, currentInput);
 		}else{
 			//We are done with scheduling ,since current track already added to track list ,just display the entire tracklist
 			displayTrackList();
@@ -114,31 +107,23 @@ public class ConfrenceSchedulerCentral {
 	private void displayTrackList(){
 		Calendar calendar=Calendar.getInstance();
 		for(int i=0;i<possibleTracks.size();i++){
-			calendar.set(2014, 1, 26, 9, 0);
+			calendar.set(ConfTrackMgmntConstant.START_YR, ConfTrackMgmntConstant.START_MNTH, ConfTrackMgmntConstant.START_DT, ConfTrackMgmntConstant.START_HR, ConfTrackMgmntConstant.START_MIN);
 			System.out.println("Track "+(i+1)+":");
 			for(int j=0;j<possibleTracks.get(i).getMorningSession().size();j++){
-				System.out.println(formatDateTime(calendar)+possibleTracks.get(i).getMorningSession().get(j).getConfrenceDetail());
+				System.out.println(ConfTrackMgmntUtil.formatDateTime(calendar)+possibleTracks.get(i).getMorningSession().get(j).getConfrenceDetail());
 				calendar.add(Calendar.MINUTE, possibleTracks.get(i).getMorningSession().get(j).getConfrenceDuration());
 			}
-			System.out.println(formatDateTime(calendar)+"Lunch");
-			calendar.add(Calendar.MINUTE,60);
+			System.out.println(ConfTrackMgmntUtil.formatDateTime(calendar)+ConfTrackMgmntConstant.LUNCH_EVENT);
+			calendar.add(Calendar.MINUTE,ConfTrackMgmntConstant.LUNCH_TIME);
 			for(int j=0;j<possibleTracks.get(i).getAfterNoonSession().size();j++){
-				System.out.println(formatDateTime(calendar)+possibleTracks.get(i).getAfterNoonSession().get(j).getConfrenceDetail());
+				System.out.println(ConfTrackMgmntUtil.formatDateTime(calendar)+possibleTracks.get(i).getAfterNoonSession().get(j).getConfrenceDetail());
 				calendar.add(Calendar.MINUTE, possibleTracks.get(i).getAfterNoonSession().get(j).getConfrenceDuration());
 			}
-			System.out.println(formatDateTime(calendar)+"Networking Event");
-			System.out.println("\n");
+			System.out.println(ConfTrackMgmntUtil.formatDateTime(calendar)+ConfTrackMgmntConstant.NETWORKING_EVENT);
+			System.out.println(ConfTrackMgmntConstant.NEW_LINE);
 		}
 	}
 	
-	/**
-	 * Format date time.
-	 *
-	 * @param calendar the calendar
-	 * @return the string
-	 */
-	private String formatDateTime(Calendar calendar){
-		return format.format(calendar.getTime());
-	}
+	
 
 }

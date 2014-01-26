@@ -76,13 +76,11 @@ AFTERNOON_SCHEDULER
 	    	   s += x.getConfrenceDuration();
 	       }
 	       if (s == target){
-	    	   //System.out.println("sum("+Arrays.toString(partial.toArray())+")="+s);
 	    	   isTargetDurationAchieved=true;
 	    	   updateAppropriateSessionScheduler(partial);
 	    	   return ;
 	       }   
 	       if (s >= target && (s-target)<=permissibleTimeTolerance){
-	    	  // System.out.println("sum("+Arrays.toString(partial.toArray())+")="+s);
 	    	   isTargetDurationAchieved=true;
 	    	   updateAppropriateSessionScheduler(partial);
 	    	   return ;

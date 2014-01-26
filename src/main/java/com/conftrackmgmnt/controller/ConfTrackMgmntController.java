@@ -8,6 +8,9 @@ import com.conftrackmgmnt.serviceimpl.ConfTrackMgmntServiceImpl;
  * The Class ConfTrackMgmntController.
  */
 public class ConfTrackMgmntController {
+	
+	/** The service. */
+	private static ConfTrackMgmntService service=new ConfTrackMgmntServiceImpl();;
 
 	/**
 	 * The main method.
@@ -16,7 +19,6 @@ public class ConfTrackMgmntController {
 	 * @throws Exception the exception
 	 */
 	public static void main(String[] args) throws Exception {
-		ConfTrackMgmntService service=new ConfTrackMgmntServiceImpl();
 		service.scheduleConfrence();
 
 	}

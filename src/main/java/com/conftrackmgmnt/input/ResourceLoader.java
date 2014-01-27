@@ -4,7 +4,7 @@ package com.conftrackmgmnt.input;
 /**
  * The Class ResourceLoader.
  */
-public class ResourceLoader {
+public interface ResourceLoader {
 	
 	/**
 	 * Retrieve file path.
@@ -12,8 +12,5 @@ public class ResourceLoader {
 	 * @param fileName the file name
 	 * @return the string
 	 */
-	public String retrieveFilePath(String fileName){
-		return this.getClass().getResource(fileName).getPath();
-	}
-
+	public String retrieveFilePath(String fileName);
 }

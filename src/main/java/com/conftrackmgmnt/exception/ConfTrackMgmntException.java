@@ -1,4 +1,4 @@
-package com.conftrackmgmnt.util;
+package com.conftrackmgmnt.exception;
 
 // TODO: Auto-generated Javadoc
 /**
